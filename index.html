@@ -232,51 +232,56 @@
             <button class="tab" onclick="showTab('prizes')">💰 Prize Structure</button>
         </div>
 <!-- Overview Tab -->
-        <div id="overview" class="tab-content active">
-            <h2 class="section-header">Season Overview</h2>
-            
-            <div class="last-updated">
-                Last Updated: <span id="lastUpdated">Loading...</span>
-            </div>
-            
-            <div class="summary-cards">
-                <div class="summary-card">
-                    <h3>Current Position</h3>
-                    <div class="value" id="overviewPosition">-</div>
-                </div>
-                <div class="summary-card">
-                    <h3>Total Points Won</h3>
-                    <div class="value" id="overviewPointsWon">0</div>
-                </div>
-                <div class="summary-card">
-                    <h3>Win Rate</h3>
-                    <div class="value" id="overviewWinRate">0%</div>
-                </div>
-                <div class="summary-card">
-                    <h3>Expected Prize (TBC)</h3>
-                    <div class="value" id="overviewPrize">£0</div>
-                </div>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-label">Weeks Played</div>
-                    <div class="stat-value" id="totalWeeks">0</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Total Points</div>
-                    <div class="stat-value" id="overviewPointsWon"> / <id="totalPoints">0</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Avg Position</div>
-                    <div class="stat-value" id="avgPosition">-</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Active Bowlers</div>
-                    <div class="stat-value" id="activeBowlers">0</div>
-                </div>
+<div id="overview" class="tab-content active">
+    <h2 class="section-header">Season Overview</h2>
+    
+    <div class="last-updated">
+        Last Updated: <span id="lastUpdated">Loading...</span>
+    </div>
+    
+    <div class="summary-cards">
+        <div class="summary-card">
+            <h3>Current Position</h3>
+            <div class="value" id="overviewPosition">-</div>
+        </div>
+        <div class="summary-card">
+            <h3>Total Points Won</h3>
+            <div class="value" id="overviewPointsDisplay">0</div>
+        </div>
+        <div class="summary-card">
+            <h3>Win Rate</h3>
+            <div class="value" id="overviewWinRate">0%</div>
+        </div>
+        <div class="summary-card">
+            <h3>Expected Prize (TBC)</h3>
+            <div class="value" id="overviewPrize">£0</div>
+        </div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-label">Weeks Played</div>
+            <div class="stat-value" id="totalWeeks">0</div>
+        </div>
+        
+        <div class="stat-item">
+            <div class="stat-label">Total Points</div>
+            <div class="stat-value">
+                <span id="overviewPointsWon">0</span> / <span id="totalPoints">0</span>
             </div>
         </div>
-        <!-- Match Results Tab -->
+        
+        <div class="stat-item">
+            <div class="stat-label">Avg Position</div>
+            <div class="stat-value" id="avgPosition">-</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Active Bowlers</div>
+            <div class="stat-value" id="activeBowlers">0</div>
+        </div>
+    </div>
+</div>
+		<!-- Match Results Tab -->
         <div id="matches" class="tab-content">
             <h2 class="section-header">Match Results</h2>
             

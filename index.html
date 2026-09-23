@@ -455,41 +455,56 @@
         }
 
         async function fetchSheetData() {
-            try {
-                const response = await fetch(API_URL);
-                const rawData = await response.json();
+    // Uses Google's direct public endpoint (No OpenSheet required)
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
 
-                matchData = [];
-                upcomingFixtures = [];
+    try {
+        const response = await fetch(gvizUrl);
+        const text = await response.text();
+        
+        // Strip the Google JSON wrapper padding
+        const jsonString = text.substring(47, text.length - 2);
+        const json = JSON.parse(jsonString);
 
-                rawData.forEach(row => {
-                    const parsedRow = {
-                        week: parseInt(row.Week) || 0,
-                        date: row.Date || "",
-                        lane: row.Lane || "-",
-                        opponent: row.Opponent || "",
-                        bowler1: row.Bowler1 || "",
-                        bowler2: row.Bowler2 || "",
-                        bowler3: row.Bowler3 || "",
-                        pointsWon: row.PointsWon !== "" && row.PointsWon !== undefined ? parseFloat(row.PointsWon) : null,
-                        pointsLost: row.PointsLost !== "" && row.PointsLost !== undefined ? parseFloat(row.PointsLost) : null,
-                        position: row.Position !== "" && row.Position !== undefined ? parseInt(row.Position) : null
-                    };
+        const rows = json.table.rows;
+        matchData = [];
+        upcomingFixtures = [];
 
-                    // If pointsWon exists, consider it a played match; otherwise, it's an upcoming fixture
-                    if (parsedRow.pointsWon !== null && !isNaN(parsedRow.pointsWon)) {
-                        matchData.push(parsedRow);
-                    } else if (parsedRow.week > 0) {
-                        upcomingFixtures.push(parsedRow);
-                    }
-                });
+        rows.forEach(r => {
+            const c = r.c;
+            if (!c || c.length === 0) return;
 
-                initDashboard();
-            } catch (error) {
-                console.error("Error fetching data from Google Sheets via OpenSheet:", error);
-                document.getElementById('lastUpdated').textContent = "Error loading data from Google Sheets";
+            const week = c[0] ? parseInt(c[0].v) || 0 : 0;
+            const date = c[1] ? (c[1].f || c[1].v || "") : "";
+            const lane = c[2] ? String(c[2].v) : "-";
+            const opponent = c[3] ? String(c[3].v) : "";
+            const bowler1 = c[4] ? String(c[4].v) : "";
+            const bowler2 = c[5] ? String(c[5].v) : "";
+            const bowler3 = c[6] ? String(c[6].v) : "";
+            
+            const pointsWon = (c[7] && c[7].v !== null && c[7].v !== undefined) ? parseFloat(c[7].v) : null;
+            const pointsLost = (c[8] && c[8].v !== null && c[8].v !== undefined) ? parseFloat(c[8].v) : null;
+            const position = (c[9] && c[9].v !== null && c[9].v !== undefined) ? parseInt(c[9].v) : null;
+
+            const parsedRow = {
+                week, date, lane, opponent, bowler1, bowler2, bowler3,
+                pointsWon, pointsLost, position
+            };
+
+            if (pointsWon !== null && !isNaN(pointsWon)) {
+                matchData.push(parsedRow);
+            } else if (week > 0) {
+                upcomingFixtures.push(parsedRow);
             }
-        }
+        });
+
+        initDashboard();
+    } catch (error) {
+        console.error("Error fetching data directly from Google Sheets:", error);
+        document.getElementById('lastUpdated').textContent = "Error loading data. Please verify network access.";
+    }
+}
+
 
         function initDashboard() {
             updateLastUpdated();
